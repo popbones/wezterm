@@ -1,7 +1,7 @@
 // let () = msg_send! is a common pattern for objc
 #![allow(clippy::let_unit_value)]
 
-use super::nsstring_to_str;
+use super::{nsstring, nsstring_to_str};
 use super::window::WindowInner;
 use crate::connection::ConnectionOps;
 use crate::os::macos::app::create_app_delegate;
@@ -35,6 +35,9 @@ impl Connection {
         unsafe {
             let ns_app = NSApp();
             ns_app.setActivationPolicy_(NSApplicationActivationPolicyRegular);
+            let appearance: id =
+                msg_send![class!(NSAppearance), appearanceNamed: *nsstring("NSAppearanceNameDarkAqua")];
+            let () = msg_send![ns_app, setAppearance: appearance];
 
             let delegate = create_app_delegate();
             let () = msg_send![ns_app, setDelegate: delegate];
